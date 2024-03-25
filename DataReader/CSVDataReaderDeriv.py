@@ -42,8 +42,10 @@ class CSVDataReader(DataReader):
         try:
             resultDF = pd.read_csv(self.path2data, engine='python', skiprows=[1], header=0,
                                    usecols=[self.xcolumn, self.ycolumn], sep=self.separator)
-            resultDF[self.xcolumn].apply(self.xoperation)
-            resultDF[self.ycolumn].apply(self.yoperation)
+            resultDF[self.xcolumn] = resultDF[self.xcolumn].apply(
+                self.xoperation)
+            resultDF[self.ycolumn] = resultDF[self.ycolumn].apply(
+                self.yoperation)
             return resultDF
 
         except Exception:
@@ -72,7 +74,8 @@ class CSVDataReader(DataReader):
 
 
 if __name__ == "__main__":
-    reader = CSVDataReader("/home/gullino18/PycharmProjects/TC-GrupoX/TP1/ParteLabo/Parte-A/Scope_A.csv")
+    reader = CSVDataReader(
+        "/home/gullino18/PycharmProjects/TC-GrupoX/TP1/ParteLabo/Parte-A/Scope_A.csv")
 
     reader.config("Signal", "x-axis", "1", lambda x: x, lambda x: x)
     print(reader.read())

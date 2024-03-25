@@ -2,7 +2,6 @@ import logging
 import os
 import sys
 
-import control
 from PyQt6 import QtWidgets, QtCore, QtGui
 from matplotlib import rcParams, font_manager, pyplot as plt
 
@@ -31,7 +30,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.traceslist = []
         self.tfTrace = []
-        self.FontFamilyComboBox.addItems(sorted(font_manager.font_family_aliases))
+        self.FontFamilyComboBox.addItems(
+            sorted(font_manager.font_family_aliases))
         self.FontFamilyComboBox.setCurrentText('serif')
         self.FontSizeSpinbox.setValue(15)
         self.ModPlot = MplCanvas(self.ModuloBox)
@@ -75,7 +75,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al plotear. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al plotear. \n {values}")
 
         return
 
@@ -83,7 +84,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             traceindex = self.TracesListBox.indexFromItem(traceitem)
             selectedtrace = self.traceslist[traceindex.row()]
-            popup = ModTracePopUp(selectedtrace.tracename, selectedtrace.color, selectedtrace.linetype)
+            popup = ModTracePopUp(selectedtrace.tracename,
+                                  selectedtrace.color, selectedtrace.linetype)
             update = popup.exec()
             for i in range(len(update)):
                 if update[i] != "":
@@ -91,11 +93,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                         case 0:
                             if isinstance(selectedtrace.reader,
                                           TFDataReader) and selectedtrace.type == TraceType.Module:
-                                index2remove = self.TransFuncComboBox.findText(str(selectedtrace))
+                                index2remove = self.TransFuncComboBox.findText(
+                                    str(selectedtrace))
                                 self.TransFuncComboBox.removeItem(index2remove)
                                 selectedtrace.tracename = update[0]
                                 traceitem.setText(str(selectedtrace))
-                                self.TransFuncComboBox.addItem(str(selectedtrace))
+                                self.TransFuncComboBox.addItem(
+                                    str(selectedtrace))
                             else:
                                 selectedtrace.tracename = update[0]
                                 traceitem.setText(str(selectedtrace))
@@ -109,7 +113,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al modificar linea. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al modificar linea. \n {values}")
 
     def addTraceEvent(self):
         try:
@@ -121,34 +126,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     return
                 for trace in traces2add:
                     self.traceslist.append(trace)
-                    item = QtWidgets.QListWidgetItem(str(trace), self.TracesListBox)
+                    item = QtWidgets.QListWidgetItem(
+                        str(trace), self.TracesListBox)
                     item.setCheckState(QtCore.Qt.CheckState.Checked)
                     self.TracesListBox.addItem(item)
             elif type(traces2add) is Trace:
                 if traces2add is None:
                     return
                 self.traceslist.append(traces2add)
-                item = QtWidgets.QListWidgetItem(str(traces2add), self.TracesListBox)
+                item = QtWidgets.QListWidgetItem(
+                    str(traces2add), self.TracesListBox)
                 item.setCheckState(QtCore.Qt.CheckState.Checked)
                 self.TracesListBox.addItem(item)
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al agregar medicion. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al agregar medicion. \n {values}")
         return
 
     def deleteTraceEvent(self):
         try:
-            index2reamove = [index.row() for index in self.TracesListBox.selectedIndexes()]
-            self.traceslist = [element for i, element in enumerate(self.traceslist) if i not in index2reamove]
+            index2reamove = [index.row()
+                             for index in self.TracesListBox.selectedIndexes()]
+            self.traceslist = [element for i, element in enumerate(
+                self.traceslist) if i not in index2reamove]
             for item in self.TracesListBox.selectedItems():
                 if self.TransFuncComboBox.findText(item.text()) != -1:
-                    self.TransFuncComboBox.removeItem(self.TransFuncComboBox.findText(item.text()))
+                    self.TransFuncComboBox.removeItem(
+                        self.TransFuncComboBox.findText(item.text()))
                 self.TracesListBox.takeItem(self.TracesListBox.row(item))
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al quitar linea. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al quitar linea. \n {values}")
 
     def updateFontSize(self, fontsize: int):
         rcParams["font.size"] = fontsize
@@ -168,7 +180,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.TransFuncComboBox.addItem(str(traces2add[0]))
                 for trace in traces2add:
                     self.traceslist.append(trace)
-                    item = QtWidgets.QListWidgetItem(str(trace), self.TracesListBox)
+                    item = QtWidgets.QListWidgetItem(
+                        str(trace), self.TracesListBox)
                     item.setCheckState(QtCore.Qt.CheckState.Checked)
                     self.TracesListBox.addItem(item)
             else:
@@ -177,13 +190,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.traceslist.append(traces2add)
                 self.tfTrace.append(traces2add)
                 self.TransFuncComboBox.addItem(str(traces2add))
-                item = QtWidgets.QListWidgetItem(str(traces2add), self.TracesListBox)
+                item = QtWidgets.QListWidgetItem(
+                    str(traces2add), self.TracesListBox)
                 item.setCheckState(QtCore.Qt.CheckState.Checked)
                 self.TracesListBox.addItem(item)
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al agregar funcion transferencia. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al agregar funcion transferencia. \n {values}")
 
     def addResponse2TF(self):
         try:
@@ -193,7 +208,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for trace in self.tfTrace:
                 if str(trace) == self.TransFuncComboBox.currentText():
                     trace2use = trace
-            popup = AddSignalResponse(trace2use.reader.transFunc, trace2use.tracename)
+            popup = AddSignalResponse(
+                trace2use.reader.transFunc, trace2use.tracename)
             traces2add = popup.exec()
             logging.debug(traces2add)
             if type(traces2add) is tuple:
@@ -201,20 +217,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                     return
                 for trace in traces2add:
                     self.traceslist.append(trace)
-                    item = QtWidgets.QListWidgetItem(str(trace), self.TracesListBox)
+                    item = QtWidgets.QListWidgetItem(
+                        str(trace), self.TracesListBox)
                     item.setCheckState(QtCore.Qt.CheckState.Checked)
                     self.TracesListBox.addItem(item)
             else:
                 if traces2add is None:
                     return
                 self.traceslist.append(traces2add)
-                item = QtWidgets.QListWidgetItem(str(traces2add), self.TracesListBox)
+                item = QtWidgets.QListWidgetItem(
+                    str(traces2add), self.TracesListBox)
                 item.setCheckState(QtCore.Qt.CheckState.Checked)
                 self.TracesListBox.addItem(item)
         except:
             types, values, traces = sys.exc_info()
             logging.error(values)
-            QtWidgets.QMessageBox.critical(self, "Error", f"Error: Problemas al agregar respuesta. \n {values}")
+            QtWidgets.QMessageBox.critical(
+                self, "Error", f"Error: Problemas al agregar respuesta. \n {values}")
 
     def showPolesAndZeros(self):
         try:
@@ -224,7 +243,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             for trace in self.tfTrace:
                 if str(trace) == self.TransFuncComboBox.currentText():
                     trace2use = trace
-            tf = control.TransferFunction(trace2use.reader.transFunc.num, trace2use.reader.transFunc.den)
+            tf = control.TransferFunction(
+                trace2use.reader.transFunc.num, trace2use.reader.transFunc.den)
             control.pzmap(tf, plot=True)
             plt.show()
         except:

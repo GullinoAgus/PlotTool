@@ -198,3 +198,4 @@ fabric.properties
 *.vsix
 
 build
+.vscode/launch.json

@@ -69,12 +69,17 @@ class MplCanvas(FigureCanvas):
         parent.layout().addWidget(self.YScaleComboBox, 0, 10)
 
         self.TitleLineEdit.textChanged['QString'].connect(self.changePlotTitle)
-        self.XAxisTitleLineEdit.textChanged['QString'].connect(self.changeXAxisTitle)
-        self.YAxisTitleLineEdit.textChanged['QString'].connect(self.changeYAxisTitle)
-        self.XScaleComboBox.currentTextChanged['QString'].connect(self.changeXScales)
-        self.YScaleComboBox.currentTextChanged['QString'].connect(self.changeYScales)
+        self.XAxisTitleLineEdit.textChanged['QString'].connect(
+            self.changeXAxisTitle)
+        self.YAxisTitleLineEdit.textChanged['QString'].connect(
+            self.changeYAxisTitle)
+        self.XScaleComboBox.currentTextChanged['QString'].connect(
+            self.changeXScales)
+        self.YScaleComboBox.currentTextChanged['QString'].connect(
+            self.changeYScales)
 
-        self.cursor = Cursor(self.axes, useblit=True, color='gray', linestyle='--', linewidth=0.8)
+        self.cursor = Cursor(self.axes, useblit=True,
+                             color='gray', linestyle='--', linewidth=0.8)
 
     def changePlotTitle(self, title: str):
         self.title = title
@@ -99,7 +104,6 @@ class MplCanvas(FigureCanvas):
 
         for trace in traces:
             data: DataFrame = trace.reader.read()
-            print(data)
             if type(trace.reader) is SpiceDataReader and trace.reader.isMonteCarlo():
                 for i in range(len(data.columns) - 1):
                     if i == 0:
@@ -120,9 +124,12 @@ class MplCanvas(FigureCanvas):
         self.axes.set_yscale(self.YScale)
         self.axes.grid(which='both')
         self.axes.legend()
-        self.axes.set_title(self.title, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
-        self.axes.set_xlabel(self.XAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
-        self.axes.set_ylabel(self.YAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
+        self.axes.set_title(
+            self.title, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
+        self.axes.set_xlabel(
+            self.XAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
+        self.axes.set_ylabel(
+            self.YAxisTitle, size=rcParams['font.size'], fontfamily=rcParams['font.family'])
         ylims = self.axes.get_ylim()
         if np.abs(ylims[0] - ylims[1]) < 0.00001:
             botylim = ylims[0] - 0.0005
